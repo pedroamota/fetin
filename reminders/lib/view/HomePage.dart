@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reminders/NewReminder.dart';
+import 'package:reminders/view/NewReminder.dart';
 import 'package:reminders/core/colors.dart';
 
 class MyHomePage extends StatefulWidget {

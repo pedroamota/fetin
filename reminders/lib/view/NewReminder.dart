@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reminders/Dados.dart';
+import 'package:reminders/view/Dados.dart';
 
 class NewReminder extends StatelessWidget {
   const NewReminder({Key? key}) : super(key: key);
