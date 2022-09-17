@@ -21,6 +21,7 @@ class DBLocal {
   save(Reminder note) async {
     Database db = await _getDBLocal();
     Map<String, dynamic> dados = {
+      "id": note.id,
       "title": note.title,
       "text": note.text,
       "app": note.app,
@@ -39,7 +40,7 @@ class DBLocal {
   remove(String id) async {
     Database db = await _getDBLocal();
     db.delete(
-      "users",
+      "lembretes",
       where: "id = ?",
       whereArgs: [id],
     );
