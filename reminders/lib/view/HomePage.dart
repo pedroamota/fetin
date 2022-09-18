@@ -16,7 +16,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 41, 41, 41),
       appBar: AppBar(
-        title: Text("Reminders"), //Image(image: AssetImage("assets/logo.png")),
+        title: Container(
+            height: 14.h,
+            child: Image(image: AssetImage("assets/reminders.png"))),
       ),
       body: Stack(
         children: [
