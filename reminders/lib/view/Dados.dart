@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class Dados extends StatelessWidget {
   TextEditingController _title = TextEditingController();
@@ -12,14 +13,17 @@ class Dados extends StatelessWidget {
       margin: EdgeInsets.all(size.width * .05),
       child: Column(children: [
         TextFormField(
-          textInputAction: TextInputAction.next,
           controller: _title,
+          textInputAction: TextInputAction.next,
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             enabled: true,
             contentPadding: EdgeInsets.only(left: 15, right: 15),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
-              borderRadius: BorderRadius.all(Radius.circular(25.0)),
+              borderSide: BorderSide(color: Colors.white),
+              borderRadius: BorderRadius.all(
+                Radius.circular(25.0),
+              ),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(
@@ -27,20 +31,21 @@ class Dados extends StatelessWidget {
               ),
             ),
             labelText: "Titulo",
-            labelStyle: TextStyle(color: Colors.grey),
+            labelStyle: TextStyle(color: Colors.white),
           ),
         ),
         SizedBox(
-          height: size.height * .01,
+          height: 5.h,
         ),
         TextFormField(
           textInputAction: TextInputAction.next,
           controller: _content,
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             enabled: true,
             contentPadding: EdgeInsets.only(left: 15, right: 15),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: BorderSide(color: Colors.white),
               borderRadius: BorderRadius.all(
                 Radius.circular(25.0),
               ),
@@ -51,7 +56,7 @@ class Dados extends StatelessWidget {
               ),
             ),
             labelText: "Descrição",
-            labelStyle: TextStyle(color: Colors.grey),
+            labelStyle: TextStyle(color: Colors.white),
           ),
         ),
       ]),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reminders/core/colors.dart';
 import 'package:reminders/view/Dados.dart';
 
 class NewReminder extends StatelessWidget {
@@ -12,6 +13,7 @@ class NewReminder extends StatelessWidget {
       insetPadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       scrollable: true,
+      title: Text("Novo Reminder"),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -20,7 +22,7 @@ class NewReminder extends StatelessWidget {
       content: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          color: AppColors.background,
         ),
         width: 93.0,
         child: Column(
@@ -42,8 +44,10 @@ class NewReminder extends StatelessWidget {
             Dados(),
             FloatingActionButton(
               mini: true,
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Salvar"),
             )
           ],
         ),
@@ -51,17 +55,3 @@ class NewReminder extends StatelessWidget {
     );
   }
 }
-
-/*
-Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.white,
-                ),
-                width: 93.0,
-                child: Column(
-                  children: [
-                  ],
-                ),
-              ),
-*/
