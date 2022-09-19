@@ -13,7 +13,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late List<String> listApp;
+  List<String> listApp = ["Escolha um App"];
 
   Future<void> getAllApps() async {
     List<AppInfo> aux = await InstalledApps.getInstalledApps();

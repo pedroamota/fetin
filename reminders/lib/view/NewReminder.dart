@@ -4,9 +4,9 @@ import 'package:sizer/sizer.dart';
 import '../core/colors.dart';
 
 class NewReminder extends StatefulWidget {
-  late List<String> listApp;
+  List<String>? listApp;
 
-  NewReminder({listApp});
+  NewReminder({this.listApp});
 
   @override
   State<NewReminder> createState() => _NewReminderState();
@@ -119,7 +119,7 @@ class _NewReminderState extends State<NewReminder> {
                       labelStyle: TextStyle(color: Colors.red),
                     ),
                     onChanged: (value) => (app = value!),
-                    value: widget.listApp[0],
+                    value: widget.listApp![0],
                     hint: Text(
                       "N sei",
                     ),
@@ -127,11 +127,7 @@ class _NewReminderState extends State<NewReminder> {
                     style: TextStyle(color: Colors.white),
                     dropdownColor: Colors.black,
                     focusColor: Colors.red,
-                    items: [
-                      widget.listApp[0],
-                      widget.listApp[1],
-                      widget.listApp[2],
-                    ].map<DropdownMenuItem<String>>((String value) {
+                    items: widget.listApp!.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(
