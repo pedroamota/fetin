@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
@@ -14,6 +16,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<String> listApp = ["Escolha um App"];
+  Timer? timer;
+
+  printMensage() {
+    print("---------------------Verificação---------------------");
+  }
 
   Future<void> getAllApps() async {
     List<AppInfo> aux = await InstalledApps.getInstalledApps();
@@ -26,7 +33,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     getAllApps();
+    timer = Timer.periodic(Duration(seconds: 2), (Timer t) => printMensage());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override

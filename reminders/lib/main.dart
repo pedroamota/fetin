@@ -4,6 +4,7 @@ import 'package:sizer/sizer.dart';
 import 'view/HomePage.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -19,4 +20,3 @@ class MyApp extends StatelessWidget {
     });
   }
 }
-
