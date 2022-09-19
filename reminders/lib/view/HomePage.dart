@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:installed_apps/app_info.dart';
+import 'package:installed_apps/installed_apps.dart';
 import 'package:reminders/view/NewReminder.dart';
 import 'package:reminders/core/colors.dart';
 import 'package:sizer/sizer.dart';
@@ -11,6 +13,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late List<String> listApp;
+
+  Future<void> getAllApps() async {
+    List<AppInfo> aux = await InstalledApps.getInstalledApps();
+
+    for (AppInfo a in aux) {
+      listApp.add(a.name!);
+    }
+  }
+
+  @override
+  void initState() {
+    getAllApps();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Container(
-          padding: EdgeInsets.only(top: 5.sp),
+            padding: EdgeInsets.only(top: 5.sp),
             height: 14.h,
             child: Image(image: AssetImage("assets/reminders.png"))),
       ),
@@ -27,7 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
           GestureDetector(
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NewReminder()),
+              MaterialPageRoute(
+                  builder: (context) => NewReminder(
+                        listApp: listApp,
+                      )),
             ),
             child: Container(
               margin: EdgeInsets.only(
