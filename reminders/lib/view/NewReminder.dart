@@ -1,57 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:reminders/core/colors.dart';
-import 'package:reminders/view/Dados.dart';
+import 'package:sizer/sizer.dart';
 
-class NewReminder extends StatelessWidget {
+class NewReminder extends StatefulWidget {
   const NewReminder({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+  State<NewReminder> createState() => _NewReminderState();
+}
 
-    return AlertDialog(
-      insetPadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
-      scrollable: true,
-      title: Text("Novo Reminder"),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      content: Container(
+class _NewReminderState extends State<NewReminder> {
+  String? title, text, app;
+  final formKey1 = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
+
+  List<String> listApp = ['instagram', 'banco', 'whatsapp'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      
+      child:     Container(
+        padding: EdgeInsets.all(10.sp),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: AppColors.background,
+          color: Colors.white,
         ),
-        width: 93.0,
-        child: Column(
-          children: [
-            Container(
-                alignment: Alignment.topRight,
-                margin: EdgeInsets.only(
-                  top: size.width * 0.02,
-                  right: size.width * 0.02,
-                ),
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Icon(
-                    Icons.arrow_circle_left_outlined,
-                    color: Colors.red,
-                    size: size.width * .1,
-                  ),
-                )),
-            Dados(),
-            FloatingActionButton(
-              mini: true,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Salvar"),
-            )
-          ],
+        child: Form(
+          child: Column(
+            children: [
+              TextFormField(
+                key: formKey1,
+                decoration: InputDecoration(labelText: "title"),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    print("null text");
+                    return "Preencha o campo";
+                  }
+                  print("not null");
+                  return null;
+                },
+              ),
+              SizedBox(height: 1.h,),
+              ElevatedButton(onPressed: (){
+                setState(() {
+                  formKey1.currentState?.validate();
+                  
+                });
+
+              }, child: Text("Login"))
+
+
+            ],
+          ),
         ),
-      ),
+      )
     );
+    
+    
+
   }
 }
