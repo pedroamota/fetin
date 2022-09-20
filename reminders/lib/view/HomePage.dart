@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
+import 'package:reminders/controller/Database.dart';
+import 'package:reminders/core/fonte.dart';
+import 'package:reminders/models/reminder.dart';
 import 'package:reminders/view/NewReminder.dart';
 import 'package:reminders/core/colors.dart';
 import 'package:sizer/sizer.dart';
@@ -17,6 +21,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<String> listApp = ["Escolha um App"];
   Timer? timer;
+  bool loading = true;
+  List<Reminder> listReminders = [];
 
   printMensage() {
     print("---------------------Verificação---------------------");
@@ -30,10 +36,26 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  recuperaReminder() async {
+    final aux = await DBLocal().getAllReminders();
+    aux.forEach(
+      (i) {
+        print(i.title);
+        listReminders.add(i);
+      },
+    );
+    setState(() {
+    loading = false;
+
+    });
+  }
+
   @override
   void initState() {
+    print("InitState");
+    recuperaReminder();
     getAllApps();
-    timer = Timer.periodic(Duration(seconds: 2), (Timer t) => printMensage());
+    timer = Timer.periodic(Duration(seconds: 20), (Timer t) => printMensage());
     super.initState();
   }
 
@@ -46,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 41, 41, 41),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Container(
@@ -90,24 +112,327 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.tips_and_updates_outlined,
-                  color: Colors.white,
-                  size: 9.w,
-                ),
-                Text(
-                  'Crie o seu primeiro Reminder',
-                  style: TextStyle(color: Colors.white, fontSize: 5.w),
-                ),
-              ],
-            ),
-          ),
+          loading
+              ? Center(child: CircularProgressIndicator())
+              : (listReminders.isEmpty)
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.tips_and_updates_outlined,
+                            color: Colors.white,
+                            size: 9.w,
+                          ),
+                          Text(
+                            'Crie o seu primeiro Reminder',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 5.w),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Center(
+                    child: SizedBox(
+                        height: 65.0.h,
+                        width: 90.0.w,
+                        child: Scrollbar(
+                          thickness: 2.0.w,
+                          isAlwaysShown: true,
+                          radius: Radius.circular(10),
+                          child: ShaderMask(
+                            shaderCallback: (Rect bounds) {
+                              return LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: <Color>[
+                                  Color.fromARGB(255, 90, 250, 255),
+                                  Colors.white,
+                                ],
+                                stops: [0.6, 1],
+                              ).createShader(bounds);
+                            },
+                            child: ListView.separated(
+                              physics: ClampingScrollPhysics(),
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return Container(
+                                  height: 2.5.h,
+                                );
+                              },
+                              itemCount: listReminders.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  height: 6.0.h,
+                                  width: 90.0.w,
+                                  padding: EdgeInsets.only(
+                                    left: 1.0.w,
+                                    right: 2.0.w,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                    left: 4.0.w,
+                                    right: 4.0.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade400,
+                                          offset: Offset(0, 5),
+                                          blurRadius: 5,
+                                        ),
+                                      ]),
+                                  child: Row(
+                                    children: [
+                                      // Initial Icon
+                                      GestureDetector(
+                                        child: Container(
+                                          height: 4.5.h,
+                                          width: 4.5.h,
+                                          margin: EdgeInsets.only(
+                                            left: 1.0.w,
+                                            right: 2.0.w,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              listReminders[index].title,
+                                              style: TextStyle(
+                                                color: Colors.redAccent,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: FontSize.title,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          print("Mostrar Reminder");
+                                        },
+                                      ),
+
+                                      // Nome do Paciente
+                                      GestureDetector(
+                                        child: Container(
+                                          width: 60.0.w - 4.5.h,
+                                          padding: EdgeInsets.only(left: 2.0.w),
+                                          child: Text(
+                                            listReminders[index].title,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: FontSize.title,
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          print("Nome do paciente");
+                                        },
+                                      ),
+
+                                      // Espaçamento
+                                      SizedBox(
+                                        width: 3.0.w,
+                                      ),
+                                      GestureDetector(
+                                          child: Icon(Icons.remove_red_eye,
+                                              size: 6.0.w),
+                                          onTap:
+                                              () {}), //_recuperarMedidas(index)),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            blendMode: BlendMode.dstOut,
+                          ),
+                        ),
+                      ),
+                  )
         ],
       ),
     );
   }
 }
+
+/*
+loading
+        ? Container(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 3.0.h,
+                ),
+                CircularProgressIndicator()
+              ],
+            ),
+          )
+        : (pacientes.isEmpty)
+            ? Column(
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      Container(
+                        child: Icon(
+                          LineIcons.user,
+                          size: 20.0.h,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(right: 10.0.w, left: 10.0.w),
+                        child: Text(
+                          lang.noPatientFound,
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: TextH.subtitle,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            : Container(
+                height: 65.0.h,
+                width: 90.0.w,
+                child: Scrollbar(
+                  thickness: 2.0.w,
+                  isAlwaysShown: true,
+                  radius: Radius.circular(10),
+                  child: ShaderMask(
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: <Color>[
+                          Colors.transparent,
+                          Colors.white,
+                        ],
+                        stops: [0.6, 1],
+                      ).createShader(bounds);
+                    },
+                    child: ListView.separated(
+                      physics: ClampingScrollPhysics(),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Container(
+                          height: 2.5.h,
+                        );
+                      },
+                      itemCount: pacientes.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          height: 6.0.h,
+                          width: 90.0.w,
+                          padding: EdgeInsets.only(
+                            left: 1.0.w,
+                            right: 2.0.w,
+                          ),
+                          margin: EdgeInsets.only(
+                            left: 4.0.w,
+                            right: 4.0.w,
+                          ),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey[400],
+                                  offset: Offset(0, 5),
+                                  blurRadius: 5,
+                                ),
+                              ]),
+                          child: Row(
+                            children: [
+                              // Initial Icon
+                              GestureDetector(
+                                child: Container(
+                                  height: 4.5.h,
+                                  width: 4.5.h,
+                                  margin: EdgeInsets.only(
+                                    left: 1.0.w,
+                                    right: 2.0.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    gradient: Styles.Gradient,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      pacientes[index]
+                                          .trim()
+                                          .split(' ')
+                                          .map((l) => l[0])
+                                          .take(2)
+                                          .join(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: TextH.subtitle - 1.w,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  featuresPaciente(
+                                    pacientes[index],
+                                    emailkey[index],
+                                    index,
+                                  );
+                                },
+                              ),
+
+                              // Nome do Paciente
+                              GestureDetector(
+                                child: Container(
+                                  width: 60.0.w - 4.5.h,
+                                  padding: EdgeInsets.only(left: 2.0.w),
+                                  child: Text(
+                                    pacientes[index],
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: TextH.subtitle,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  featuresPaciente(
+                                    pacientes[index],
+                                    emailkey[index],
+                                    index,
+                                  );
+                                },
+                              ),
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.add,
+                                  size: 6.0.w,
+                                ),
+                                onTap: () => showSelect(emailkey[index]),
+                              ),
+
+                              // Espaçamento
+                              SizedBox(
+                                width: 3.0.w,
+                              ),
+                              GestureDetector(
+                                child: Icon(Icons.remove_red_eye, size: 6.0.w),
+                                onTap: () => selectHistoric(
+                                  index,
+                                  emailkey[index],
+                                ),
+                              ), //_recuperarMedidas(index)),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    blendMode: BlendMode.dstOut,
+                  ),
+                ),
+              );
+  }
+ */

@@ -18,12 +18,12 @@ class DBLocal {
     return db;
   }
 
-  save(Reminder note) async {
+  save(title, text, app) async {
     Database db = await _getDBLocal();
     Map<String, dynamic> dados = {
-      "title": note.title,
-      "text": note.text,
-      "app": note.app,
+      "title": title,
+      "text": text,
+      "app": app,
     };
     db.insert("lembretes", dados);
   }
@@ -57,6 +57,8 @@ class DBLocal {
         aux.text = element["text"];
         aux.app = element["app"];
         notes.add(aux);
+        print("get database");
+        print(aux.title);
       },
     );
     return notes;
