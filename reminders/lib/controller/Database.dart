@@ -12,7 +12,7 @@ class DBLocal {
       onCreate: (db, verRecente) async {
         //Sera usado ID?
         await db.execute(
-            "CREATE TABLE lembretes (id TEXT, title TEXT, text TEXT, app TEXT)");
+            "CREATE TABLE lembretes (title TEXT, text TEXT, app TEXT)");
       },
     );
     return db;
@@ -21,7 +21,6 @@ class DBLocal {
   save(Reminder note) async {
     Database db = await _getDBLocal();
     Map<String, dynamic> dados = {
-      "id": note.id,
       "title": note.title,
       "text": note.text,
       "app": note.app,
@@ -33,7 +32,7 @@ class DBLocal {
     Database db = await _getDBLocal();
     await db.rawQuery(
       "UPDATE lembretes SET text = ? and title = ? and app = ? WHERE id = ?",
-      [note.text, note.title, note.app, note.id],
+      [note.text, note.title, note.app,],
     );
   }
 
@@ -57,7 +56,6 @@ class DBLocal {
         aux.title = element["title"];
         aux.text = element["text"];
         aux.app = element["app"];
-        aux.id = element["id"];
         notes.add(aux);
       },
     );
