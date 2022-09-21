@@ -114,6 +114,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/*
           Center(
             child: FutureBuilder(
               future: recuperaReminder(), //_pdfInfo()
@@ -135,13 +142,10 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           )
-        ],
-      ),
-    );
-  }
-}
 
-/*
+
+
+
 loading
         ? Container(
             child: Column(
