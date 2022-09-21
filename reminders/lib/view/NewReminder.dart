@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reminders/controller/Database.dart';
@@ -29,7 +31,13 @@ class _NewReminderState extends State<NewReminder> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text("Novo Reminder"),
+        backgroundColor: AppColors.background,
+        title: Container(
+          padding: EdgeInsets.only(top: 5.sp),
+          height: 14.h,
+          child: Image(image: AssetImage("assets/reminders.png")),
+          width: 60.w,
+        ),
       ),
       body: Column(
         children: [
@@ -89,7 +97,10 @@ class _NewReminderState extends State<NewReminder> {
                       ),
                     ),
                     labelText: "Descrição",
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'RobotoMono',
+                    ),
                   ),
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
@@ -143,6 +154,9 @@ class _NewReminderState extends State<NewReminder> {
                           value: value,
                           child: Text(
                             value,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                            ),
                           ),
                         );
                       },
@@ -153,20 +167,22 @@ class _NewReminderState extends State<NewReminder> {
             ),
           ),
           FloatingActionButton(
+            backgroundColor: Colors.green,
             mini: true,
             onPressed: () {
               formKey1.currentState?.validate();
               formKey2.currentState?.validate();
-              CustomNotification notification =
-                  CustomNotification(id: 1, title: title.text, body: text.text);
+              CustomNotification notification = CustomNotification(
+                  id: 1,
+                  title: "Reminders",
+                  body: "${title.text}: ${text.text}",
+                  );
+              Future.delayed(
+                  const Duration(seconds: 5), () => printMensage(notification));
 
-              Provider.of<NotificationService>(context, listen: false)
-                  .showNotification(notification);
-
-              DBLocal().save(title.text, text.text, app);
-              //Navigator.of(context).pop();
+              //DBLocal().save(title.text, text.text, app);
             },
-            child: Icon(Icons.check_circle_outline),
+            child: Icon(Icons.check),
           ),
           SizedBox(
             height: 1.h,
@@ -174,5 +190,10 @@ class _NewReminderState extends State<NewReminder> {
         ],
       ),
     );
+  }
+
+  printMensage(notification) {
+    Provider.of<NotificationService>(context, listen: false)
+        .showNotification(notification);
   }
 }

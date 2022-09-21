@@ -2,11 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
+import 'package:provider/provider.dart';
 import 'package:reminders/controller/Database.dart';
 import 'package:reminders/models/reminder.dart';
 import 'package:reminders/view/NewReminder.dart';
 import 'package:reminders/core/colors.dart';
 import 'package:sizer/sizer.dart';
+
+import '../controller/FlutterNotification.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -21,10 +24,6 @@ class _MyHomePageState extends State<MyHomePage> {
   bool hasData = true;
   late Reminder listReminders;
 
-  printMensage() {
-    print("---------------------Verificação---------------------");
-  }
-
   Future getAllApps() async {
     List<AppInfo> aux = await InstalledApps.getInstalledApps();
 
@@ -34,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Reminder> recuperaReminder() async {
-    Reminder aux = await DBLocal().getAllReminders();
+    Reminder aux = Reminder();
 
     /*
     if (aux != 0) {
@@ -53,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     getAllApps();
-    timer = Timer.periodic(Duration(seconds: 20), (Timer t) => printMensage());
     super.initState();
   }
 
@@ -65,53 +63,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Future<Reminder> lembrete = recuperaReminder();
-
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        title: Container(
-            padding: EdgeInsets.only(top: 5.sp),
-            height: 14.h,
-            child: Image(image: AssetImage("assets/reminders.png"))),
+      floatingActionButton: Container(
+        
+        width: 50.sp,
+        height: 50.sp,
+        child: FloatingActionButton(
+          backgroundColor: Colors.green,
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => NewReminder(
+                      listApp: listApp,
+                    )),
+          ),
+          child: Icon(
+            Icons.add_outlined,
+            size: 40.sp,
+          ),
+        ),
       ),
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => NewReminder(
-                          listApp: listApp,
-                        )),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.only(
-                top: 2.h,
-                left: 4.w,
-                right: 4.w,
+          Container(
+            padding: EdgeInsets.only(top: 1.h),
+            alignment: Alignment.center,
+            child: AppBar(
+              backgroundColor: AppColors.background,
+              title: Container(
+                padding: EdgeInsets.only(top: 5.sp),
+                height: 14.h,
+                child: Image(
+                  image: AssetImage("assets/reminders.png"),
+                ),
+                width: 100.w,
               ),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 151, 151, 151),
-                backgroundBlendMode: BlendMode.difference,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              //width: size.width,
-              height: 5.h,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 1.h,
-                  ),
-                  Text(
-                    "Criar um reminder...",
-                    style: TextStyle(color: AppColors.text, fontSize: 4.w),
-                  ),
-                ],
-              ),
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.tips_and_updates_outlined,
+                  color: Colors.white,
+                  size: 9.w,
+                ),
+                Text(
+                  'Crie o seu primeiro Reminder',
+                  style: TextStyle(color: Colors.white, fontSize: 5.w),
+                ),
+              ],
             ),
           ),
         ],

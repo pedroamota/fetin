@@ -55,6 +55,7 @@ class DBLocal {
     List<Map> list = await db.rawQuery('SELECT * FROM lembretes');
 
     if (list.length != 0) {
+      
       list.forEach(
         (element) {
           Reminder aux = Reminder();
