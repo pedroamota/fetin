@@ -153,23 +153,20 @@ class _NewReminderState extends State<NewReminder> {
             ),
           ),
           FloatingActionButton(
-            mini: false,
+            mini: true,
             onPressed: () {
               formKey1.currentState?.validate();
               formKey2.currentState?.validate();
               CustomNotification notification =
                   CustomNotification(id: 1, title: title.text, body: text.text);
 
-              print("App: $app");
-              print("Title: ${title.text}");
-              print("Text: ${text.text}");
               Provider.of<NotificationService>(context, listen: false)
                   .showNotification(notification);
 
               DBLocal().save(title.text, text.text, app);
               //Navigator.of(context).pop();
             },
-            child: Text("Salvar"),
+            child: Icon(Icons.check_circle_outline),
           ),
           SizedBox(
             height: 1.h,

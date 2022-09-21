@@ -32,7 +32,11 @@ class DBLocal {
     Database db = await _getDBLocal();
     await db.rawQuery(
       "UPDATE lembretes SET text = ? and title = ? and app = ? WHERE id = ?",
-      [note.text, note.title, note.app,],
+      [
+        note.text,
+        note.title,
+        note.app,
+      ],
     );
   }
 
@@ -50,17 +54,20 @@ class DBLocal {
     Database db = await _getDBLocal();
     List<Map> list = await db.rawQuery('SELECT * FROM lembretes');
 
-    list.forEach(
-      (element) {
-        Reminder aux = Reminder();
-        aux.title = element["title"];
-        aux.text = element["text"];
-        aux.app = element["app"];
-        notes.add(aux);
-        print("get database");
-        print(aux.title);
-      },
-    );
-    return notes;
+    if (list.length != 0) {
+      list.forEach(
+        (element) {
+          Reminder aux = Reminder();
+          aux.title = element["title"];
+          aux.text = element["text"];
+          aux.app = element["app"];
+          notes.add(aux);
+          print("get database; ${aux.title}");
+        },
+      );
+    } else {
+      return 0;
+    }
+    return notes[0];
   }
 }

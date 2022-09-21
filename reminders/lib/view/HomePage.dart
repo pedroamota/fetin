@@ -1,11 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:reminders/controller/Database.dart';
-import 'package:reminders/core/fonte.dart';
 import 'package:reminders/models/reminder.dart';
 import 'package:reminders/view/NewReminder.dart';
 import 'package:reminders/core/colors.dart';
@@ -21,14 +18,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<String> listApp = ["Escolha um App"];
   Timer? timer;
-  bool loading = true;
-  List<Reminder> listReminders = [];
+  bool hasData = true;
+  late Reminder listReminders;
 
   printMensage() {
     print("---------------------Verificação---------------------");
   }
 
-  Future<void> getAllApps() async {
+  Future getAllApps() async {
     List<AppInfo> aux = await InstalledApps.getInstalledApps();
 
     for (AppInfo a in aux) {
@@ -36,23 +33,25 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  recuperaReminder() async {
-    final aux = await DBLocal().getAllReminders();
-    aux.forEach(
-      (i) {
-        print(i.title);
-        listReminders.add(i);
-      },
-    );
-    setState(() {
-    loading = false;
+  Future<Reminder> recuperaReminder() async {
+    Reminder aux = await DBLocal().getAllReminders();
 
-    });
+    /*
+    if (aux != 0) {
+      aux.forEach(
+        (i) {
+          print("recupera reminder ${i.title}");
+          listReminders.add(i);
+        },
+      );
+    } else {
+      hasData = false;
+    }*/
+    return aux;
   }
 
   @override
   void initState() {
-    recuperaReminder();
     getAllApps();
     timer = Timer.periodic(Duration(seconds: 20), (Timer t) => printMensage());
     super.initState();
@@ -66,10 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<Reminder> lembrete = recuperaReminder();
+
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.background,
         title: Container(
             padding: EdgeInsets.only(top: 5.sp),
             height: 14.h,
@@ -77,14 +78,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => NewReminder(
-                        listApp: listApp,
-                      )),
-            ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NewReminder(
+                          listApp: listApp,
+                        )),
+              );
+            },
             child: Container(
               margin: EdgeInsets.only(
                 top: 2.h,
@@ -111,142 +114,27 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          loading
-              ? Center(child: CircularProgressIndicator())
-              : (listReminders.isEmpty)
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.tips_and_updates_outlined,
-                            color: Colors.white,
-                            size: 9.w,
-                          ),
-                          Text(
-                            'Crie o seu primeiro Reminder',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 5.w),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Center(
-                    child: SizedBox(
-                        height: 65.0.h,
-                        width: 90.0.w,
-                        child: Scrollbar(
-                          thickness: 2.0.w,
-                          isAlwaysShown: true,
-                          radius: Radius.circular(10),
-                          child: ShaderMask(
-                            shaderCallback: (Rect bounds) {
-                              return LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  Color.fromARGB(255, 90, 250, 255),
-                                  Colors.white,
-                                ],
-                                stops: [0.6, 1],
-                              ).createShader(bounds);
-                            },
-                            child: ListView.separated(
-                              physics: ClampingScrollPhysics(),
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                return Container(
-                                  height: 2.5.h,
-                                );
-                              },
-                              itemCount: listReminders.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                  height: 6.0.h,
-                                  width: 90.0.w,
-                                  padding: EdgeInsets.only(
-                                    left: 1.0.w,
-                                    right: 2.0.w,
-                                  ),
-                                  margin: EdgeInsets.only(
-                                    left: 4.0.w,
-                                    right: 4.0.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade400,
-                                          offset: Offset(0, 5),
-                                          blurRadius: 5,
-                                        ),
-                                      ]),
-                                  child: Row(
-                                    children: [
-                                      // Initial Icon
-                                      GestureDetector(
-                                        child: Container(
-                                          height: 4.5.h,
-                                          width: 4.5.h,
-                                          margin: EdgeInsets.only(
-                                            left: 1.0.w,
-                                            right: 2.0.w,
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              listReminders[index].title,
-                                              style: TextStyle(
-                                                color: Colors.redAccent,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: FontSize.title,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          print("Mostrar Reminder");
-                                        },
-                                      ),
-
-                                      // Nome do Paciente
-                                      GestureDetector(
-                                        child: Container(
-                                          width: 60.0.w - 4.5.h,
-                                          padding: EdgeInsets.only(left: 2.0.w),
-                                          child: Text(
-                                            listReminders[index].title,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: FontSize.title,
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          print("Nome do paciente");
-                                        },
-                                      ),
-
-                                      // Espaçamento
-                                      SizedBox(
-                                        width: 3.0.w,
-                                      ),
-                                      GestureDetector(
-                                          child: Icon(Icons.remove_red_eye,
-                                              size: 6.0.w),
-                                          onTap:
-                                              () {}), //_recuperarMedidas(index)),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                            blendMode: BlendMode.dstOut,
-                          ),
-                        ),
-                      ),
-                  )
+          Center(
+            child: FutureBuilder(
+              future: recuperaReminder(), //_pdfInfo()
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return hasData
+                      ? Container(
+                          width: 20.w,
+                          height: 30.h,
+                          color: Colors.redAccent,
+                        )
+                      : Container(
+                          child: Text("${lembrete}"),
+                        );
+                } else {
+                  recuperaReminder();
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+          )
         ],
       ),
     );

@@ -8,7 +8,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
-      providers: [
+      providers: [ 
         Provider<NotificationService>(create: (context) => NotificationService())
       ],
       child: const MyApp(),
