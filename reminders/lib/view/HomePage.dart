@@ -52,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    print("InitState");
     recuperaReminder();
     getAllApps();
     timer = Timer.periodic(Duration(seconds: 20), (Timer t) => printMensage());

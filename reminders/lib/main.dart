@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:provider/provider.dart';
-import 'controller/FlutterNotificario.dart';
+import 'controller/FlutterNotification.dart';
 import 'view/HomePage.dart';
 
 void main() {

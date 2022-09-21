@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reminders/controller/Database.dart';
+import 'package:reminders/controller/FlutterNotification.dart';
 import 'package:reminders/models/reminder.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
@@ -153,13 +155,16 @@ class _NewReminderState extends State<NewReminder> {
           FloatingActionButton(
             mini: false,
             onPressed: () {
-
               formKey1.currentState?.validate();
               formKey2.currentState?.validate();
+              CustomNotification notification =
+                  CustomNotification(id: 1, title: title.text, body: text.text);
 
               print("App: $app");
               print("Title: ${title.text}");
               print("Text: ${text.text}");
+              Provider.of<NotificationService>(context, listen: false)
+                  .showNotification(notification);
 
               DBLocal().save(title.text, text.text, app);
               //Navigator.of(context).pop();
