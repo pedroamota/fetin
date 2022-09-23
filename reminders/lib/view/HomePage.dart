@@ -62,25 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Container(
-        width: 33.sp,
-        height: 33.sp,
-        child: FloatingActionButton(
-          backgroundColor: Colors.green,
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NewReminder(
-                listApp: listApp,
-              ),
-            ),
-          ),
-          child: Icon(
-            Icons.add_outlined,
-            size: 30.sp,
-          ),
-        ),
-      ),
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
@@ -99,6 +80,25 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Image.asset("assets/home.gif"),
             ),
           ),
+          Positioned(
+            top: 90.h,
+            left: 45.w,
+            child: FloatingActionButton(
+              backgroundColor: Colors.green,
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewReminder(
+                    listApp: listApp,
+                  ),
+                ),
+              ),
+              child: Icon(
+                Icons.add_outlined,
+                size: 30.sp,
+              ),
+            ),
+          )
         ],
       ),
     );

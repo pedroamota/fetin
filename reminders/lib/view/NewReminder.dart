@@ -38,7 +38,7 @@ class _NewReminderState extends State<NewReminder> {
           child: Row(
             children: [
               SizedBox(
-                width: 20.w,
+                width: 2.w,
               ),
               Image(image: AssetImage("assets/reminders.png")),
             ],
@@ -245,8 +245,8 @@ class _NewReminderState extends State<NewReminder> {
             ),
           ),
           Container(
-            width: 10.w,
-            height: 10.w,
+            width: 35.sp,
+            height: 35.sp,
             child: FloatingActionButton(
               backgroundColor: Colors.green,
               mini: true,
@@ -258,14 +258,14 @@ class _NewReminderState extends State<NewReminder> {
                   title: "Reminders",
                   body: "${title.text}: ${text.text}",
                 );
-                Future.delayed(const Duration(seconds: 5),
+                Future.delayed(const Duration(seconds: 8),
                     () => printMensage(notification));
 
                 //DBLocal().save(title.text, text.text, app);
               },
               child: Icon(
                 Icons.check,
-                size: 5.w,
+                size: 8.w,
               ),
             ),
           ),
