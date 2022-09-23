@@ -62,60 +62,41 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Container(
-        width: 50.sp,
-        height: 50.sp,
-        child: FloatingActionButton(
-          backgroundColor: Colors.green,
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => NewReminder(
-                      listApp: listApp,
-                    )),
-          ),
-          child: Icon(
-            Icons.add_outlined,
-            size: 40.sp,
-          ),
-        ),
-      ),
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
           Container(
-            padding: EdgeInsets.only(top: 1.h),
-            alignment: Alignment.center,
-            child: AppBar(
-              backgroundColor: AppColors.background,
-              title: Container(
-                padding: EdgeInsets.only(top: 5.sp),
-                height: 14.h,
-                child: Image(
-                  image: AssetImage("assets/reminders.png"),
-                ),
-                width: 100.w,
-              ),
+            padding: EdgeInsets.only(top: 10.sp),
+            height: 22.h,
+            width: 100.w,
+            child: Image(
+              image: AssetImage("assets/reminders.png"),
             ),
           ),
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.tips_and_updates_outlined,
-                  color: Colors.white,
-                  size: 9.w,
-                ),
-                Text(
-                  'Crie o seu primeiro Reminder',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 5.w,
-                    fontFamily: 'Concert',
+            child: Container(
+              margin: EdgeInsets.only(top: 10.h),
+              height: 80.h,
+              child: Image.asset("assets/home.gif"),
+            ),
+          ),
+          Positioned(
+            top: 90.h,
+            left: 45.w,
+            child: FloatingActionButton(
+              backgroundColor: Colors.green,
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewReminder(
+                    listApp: listApp,
                   ),
                 ),
-              ],
+              ),
+              child: Icon(
+                Icons.add_outlined,
+                size: 40.sp,
+              ),
             ),
           ),
         ],

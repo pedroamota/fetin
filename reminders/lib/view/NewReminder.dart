@@ -35,14 +35,7 @@ class _NewReminderState extends State<NewReminder> {
         title: Container(
           padding: EdgeInsets.only(top: 5.sp),
           height: 14.h,
-          child: Row(
-            children: [
-              SizedBox(
-                width: 20.w,
-              ),
-              Image(image: AssetImage("assets/reminders.png")),
-            ],
-          ),
+          child: Image(image: AssetImage("assets/reminders.png")),
           width: 60.w,
         ),
       ),
@@ -52,6 +45,30 @@ class _NewReminderState extends State<NewReminder> {
             margin: EdgeInsets.all(5.w),
             child: Column(
               children: [
+                SizedBox(
+                  height: 2.h,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.tips_and_updates_outlined,
+                      color: Colors.white,
+                      size: 9.w,
+                    ),
+                    Text(
+                      'Crie o seu primeiro Reminder',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 5.w,
+                        fontFamily: 'Concert',
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 8.h,
+                ),
                 Container(
                   decoration: BoxDecoration(
                       color: Color.fromARGB(255, 255, 233, 147),
@@ -221,8 +238,8 @@ class _NewReminderState extends State<NewReminder> {
             ),
           ),
           Container(
-            width: 10.w,
-            height: 10.w,
+            width: 14.w,
+            height: 14.w,
             child: FloatingActionButton(
               backgroundColor: Colors.green,
               mini: true,
@@ -234,19 +251,19 @@ class _NewReminderState extends State<NewReminder> {
                   title: "Reminders",
                   body: "${title.text}: ${text.text}",
                 );
-                Future.delayed(const Duration(seconds: 8),
+                Future.delayed(const Duration(seconds: 5),
                     () => printMensage(notification));
 
                 //DBLocal().save(title.text, text.text, app);
               },
               child: Icon(
                 Icons.check,
-                size: 5.w,
+                size: 8.w,
               ),
             ),
           ),
           SizedBox(
-            height: 1.h,
+            height: 10.h,
           ),
         ],
       ),
