@@ -2,14 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
-import 'package:provider/provider.dart';
-import 'package:reminders/controller/Database.dart';
 import 'package:reminders/models/reminder.dart';
 import 'package:reminders/view/NewReminder.dart';
 import 'package:reminders/core/colors.dart';
 import 'package:sizer/sizer.dart';
 
-import '../controller/FlutterNotification.dart';
+import '../models/apps.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -19,17 +17,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> listApp = ["Escolha um App"];
+  List<AppInfo> listApp = [];
   Timer? timer;
   bool hasData = true;
   late Reminder listReminders;
 
   Future getAllApps() async {
-    List<AppInfo> aux = await InstalledApps.getInstalledApps();
-
-    for (AppInfo a in aux) {
-      listApp.add(a.name!);
+    List<AppInfo> appInfo = await InstalledApps.getInstalledApps();
+    for (AppInfo a in appInfo) {
+      listApp.add(a);
     }
+    print(listApp[0].name);
   }
 
   Future<Reminder> recuperaReminder() async {
@@ -65,7 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Container(
-        
         width: 50.sp,
         height: 50.sp,
         child: FloatingActionButton(
@@ -112,7 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Text(
                   'Crie o seu primeiro Reminder',
-                  style: TextStyle(color: Colors.white, fontSize: 5.w),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 5.w,
+                    fontFamily: 'Concert',
+                  ),
                 ),
               ],
             ),

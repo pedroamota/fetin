@@ -1,17 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:installed_apps/app_info.dart';
 import 'package:provider/provider.dart';
-import 'package:reminders/controller/Database.dart';
 import 'package:reminders/controller/FlutterNotification.dart';
-import 'package:reminders/models/reminder.dart';
+import 'package:reminders/models/apps.dart';
 import 'package:sizer/sizer.dart';
-import 'package:sqflite/sqflite.dart';
 
 import '../core/colors.dart';
 
 class NewReminder extends StatefulWidget {
-  List<String>? listApp;
+  List<AppInfo>? listApp;
 
   NewReminder({this.listApp});
 
@@ -21,10 +19,12 @@ class NewReminder extends StatefulWidget {
 
 class _NewReminderState extends State<NewReminder> {
   String? app;
+  final sizeBox = 10.h;
   final formKey1 = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
   TextEditingController title = TextEditingController();
   TextEditingController text = TextEditingController();
+  String? dropdownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,14 @@ class _NewReminderState extends State<NewReminder> {
         title: Container(
           padding: EdgeInsets.only(top: 5.sp),
           height: 14.h,
-          child: Image(image: AssetImage("assets/reminders.png")),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 20.w,
+              ),
+              Image(image: AssetImage("assets/reminders.png")),
+            ],
+          ),
           width: 60.w,
         ),
       ),
@@ -45,81 +52,106 @@ class _NewReminderState extends State<NewReminder> {
             margin: EdgeInsets.all(5.w),
             child: Column(
               children: [
-                TextFormField(
-                  key: formKey1,
-                  controller: title,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    enabled: true,
-                    contentPadding: EdgeInsets.only(left: 15, right: 15),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 233, 147),
                       borderRadius: BorderRadius.all(
                         Radius.circular(15.0),
+                      )),
+                  child: TextFormField(
+                    key: formKey1,
+                    controller: title,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Concert',
+                    ),
+                    decoration: InputDecoration(
+                      enabled: true,
+                      contentPadding: EdgeInsets.only(left: 15, right: 15),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0),
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0),
+                        ),
+                      ),
+                      labelText: "Titulo:",
+                      labelStyle: TextStyle(
+                        fontSize: 10.sp,
+                        color: Colors.black,
+                        fontFamily: 'Concert',
                       ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15.0),
-                      ),
-                    ),
-                    labelText: "Titulo",
-                    labelStyle: TextStyle(color: Colors.white),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        print("null text");
+                        return "Preencha o campo";
+                      }
+                      title.text = value;
+                      return "teste";
+                    },
                   ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      print("null text");
-                      return "Preencha o campo";
-                    }
-                    title.text = value;
-                    return "teste";
-                  },
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                TextFormField(
-                  key: formKey2,
-                  controller: text,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    enabled: true,
-                    contentPadding: EdgeInsets.only(left: 15, right: 15),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15.0),
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15.0),
-                      ),
-                    ),
-                    labelText: "Descrição",
-                    labelStyle: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'RobotoMono',
-                    ),
-                  ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      print("null descrição");
-                      return "Preencha o campo";
-                    }
-                    text.text = value;
-                    return "teste";
-                  },
                 ),
                 SizedBox(
                   height: 1.h,
                 ),
                 Container(
-                  height: 4.0.h,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: AppColors.background,
+                      color: Color.fromARGB(255, 255, 233, 147),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      )),
+                  child: TextFormField(
+                    key: formKey2,
+                    controller: text,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Concert',
+                    ),
+                    decoration: InputDecoration(
+                      enabled: true,
+                      contentPadding: EdgeInsets.only(left: 15, right: 15),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0),
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0),
+                        ),
+                      ),
+                      labelText: "Descrição:",
+                      labelStyle: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Concert',
+                        fontSize: 10.sp,
+                      ),
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        print("null descrição");
+                        return "Preencha o campo";
+                      }
+                      text.text = value;
+                      return "teste";
+                    },
                   ),
+                ),
+                SizedBox(
+                  height: 1.h,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 233, 147),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      )),
                   child: DropdownButtonFormField<String>(
                     iconSize: 20.sp,
                     decoration: InputDecoration(
@@ -137,26 +169,48 @@ class _NewReminderState extends State<NewReminder> {
                         ),
                       ),
                       labelText: null,
-                      labelStyle: TextStyle(color: Colors.red),
+                      labelStyle: TextStyle(color: Colors.white),
                     ),
-                    onChanged: (value) => (app = value!),
-                    value: widget.listApp![0],
+                    onChanged: (value) => setState(
+                      () => dropdownValue = value,
+                    ),
+                    value: dropdownValue,
                     hint: Text(
-                      "N sei",
+                      "Escolha um App:",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10.sp,
+                      ),
                     ),
-                    iconEnabledColor: Colors.white,
-                    style: TextStyle(color: Colors.white),
-                    dropdownColor: Colors.black,
-                    focusColor: Colors.red,
+                    iconEnabledColor: Colors.black,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Concert',
+                    ),
+                    dropdownColor: Colors.white,
+                    focusColor: Colors.transparent,
                     items: widget.listApp!.map<DropdownMenuItem<String>>(
-                      (String value) {
+                      (AppInfo value) {
                         return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                            ),
+                          value: value.name,
+                          child: Row(
+                            children: [
+                              Container(
+                                  height: 4.h,
+                                  child: Image.memory(value.icon!)),
+                              SizedBox(
+                                width: 2.w,
+                              ),
+                              Container(
+                                width: 65.w,
+                                child: Text(
+                                  value.name!,
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -166,23 +220,30 @@ class _NewReminderState extends State<NewReminder> {
               ],
             ),
           ),
-          FloatingActionButton(
-            backgroundColor: Colors.green,
-            mini: true,
-            onPressed: () {
-              formKey1.currentState?.validate();
-              formKey2.currentState?.validate();
-              CustomNotification notification = CustomNotification(
+          Container(
+            width: 10.w,
+            height: 10.w,
+            child: FloatingActionButton(
+              backgroundColor: Colors.green,
+              mini: true,
+              onPressed: () {
+                formKey1.currentState?.validate();
+                formKey2.currentState?.validate();
+                CustomNotification notification = CustomNotification(
                   id: 1,
                   title: "Reminders",
                   body: "${title.text}: ${text.text}",
-                  );
-              Future.delayed(
-                  const Duration(seconds: 5), () => printMensage(notification));
+                );
+                Future.delayed(const Duration(seconds: 8),
+                    () => printMensage(notification));
 
-              //DBLocal().save(title.text, text.text, app);
-            },
-            child: Icon(Icons.check),
+                //DBLocal().save(title.text, text.text, app);
+              },
+              child: Icon(
+                Icons.check,
+                size: 5.w,
+              ),
+            ),
           ),
           SizedBox(
             height: 1.h,
