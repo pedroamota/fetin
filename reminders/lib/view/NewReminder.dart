@@ -35,7 +35,14 @@ class _NewReminderState extends State<NewReminder> {
         title: Container(
           padding: EdgeInsets.only(top: 5.sp),
           height: 14.h,
-          child: Image(image: AssetImage("assets/reminders.png")),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 20.w,
+              ),
+              Image(image: AssetImage("assets/reminders.png")),
+            ],
+          ),
           width: 60.w,
         ),
       ),
@@ -238,8 +245,8 @@ class _NewReminderState extends State<NewReminder> {
             ),
           ),
           Container(
-            width: 14.w,
-            height: 14.w,
+            width: 10.w,
+            height: 10.w,
             child: FloatingActionButton(
               backgroundColor: Colors.green,
               mini: true,
@@ -258,12 +265,9 @@ class _NewReminderState extends State<NewReminder> {
               },
               child: Icon(
                 Icons.check,
-                size: 8.w,
+                size: 5.w,
               ),
             ),
-          ),
-          SizedBox(
-            height: 10.h,
           ),
         ],
       ),
